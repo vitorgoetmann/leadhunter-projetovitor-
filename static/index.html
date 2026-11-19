@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeadHunter — Encontre seus clientes em potencial</title>
+  <meta name="description" content="LeadHunter: pesquise empresas no Google Maps por palavra-chave e localização. Extraia contatos, endereços, avaliações e muito mais." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-layer-1"></div>
+  <div class="bg-layer-2"></div>
+  <div class="bg-layer-3"></div>
+  <!-- ── BACKGROUND PARTICLES ────────────────────────── -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- ── APP WRAPPER ─────────────────────────────────── -->
+  <div class="app-wrapper">
+
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-inner">
+        <div class="logo">
+          <span class="logo-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="ui-icon" role="img" aria-hidden="true">
+              <path d="M12 3a9 9 0 1 0 9 9" />
+              <path d="M12 7a5 5 0 1 0 5 5" />
+              <circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none" />
+            </svg>
+          </span>
+          <span class="logo-text">Lead<span class="logo-accent">Hunter</span></span>
+        </div>
+        <div class="header-badge">Google Maps Scraper</div>
+      </div>
+    </header>
+
+    <!-- HERO / SEARCH SECTION -->
+    <section class="hero">
+      <div class="hero-glow hero-glow-1"></div>
+      <div class="hero-glow hero-glow-2"></div>
+
+      <div class="hero-content">
+        <h1 class="hero-title">
+          Encontre <span class="gradient-text">leads poderosos</span><br />
+          em qualquer lugar do Brasil
+        </h1>
+        <p class="hero-subtitle">
+          Pesquise no Google Maps por qualquer tipo de negócio e extraia contatos, telefones, sites e muito mais em segundos.
+        </p>
+
+        <!-- SEARCH CARD -->
+        <div class="search-card" id="search-card">
+          <div class="search-fields">
+            <div class="field-group">
+              <label class="field-label" for="keyword-input">
+                <span class="field-icon field-icon-search" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" class="ui-icon" role="img" aria-hidden="true">
+                    <circle cx="11" cy="11" r="5.5" />
+                    <path d="M15.5 15.5L20 20" />
+                  </svg>
+                </span>
+                Tipo de negócio
+              </label>
+              <input
+                id="keyword-input"
+                type="text"
+                class="field-input"
+                placeholder="Ex: churrascaria, oficina, dentista…"
+                autocomplete="off"
+              />
+            </div>
+            <div class="field-divider"></div>
+            <div class="field-group">
+              <label class="field-label" for="location-input">
+                <span class="field-icon field-icon-location" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" class="ui-icon" role="img" aria-hidden="true">
+                    <path d="M12 21s6-5.2 6-11a6 6 0 0 0-12 0c0 5.8 6 11 6 11z" />
+                    <circle cx="12" cy="10" r="2.2" fill="currentColor" stroke="none" />
+                  </svg>
+                </span>
+                Localização
+              </label>
+              <input
+                id="location-input"
+                type="text"
+                class="field-input"
+                placeholder="Ex: Santa Catarina, Florianópolis…"
+                autocomplete="off"
+              />
+            </div>
+            <div class="field-divider"></div>
+            <div class="field-group field-group-small">
+              <label class="field-label" for="max-results-input">
+                <span class="field-icon field-icon-target" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" class="ui-icon" role="img" aria-hidden="true">
+                    <circle cx="12" cy="12" r="8" />
+                    <circle cx="12" cy="12" r="4" />
+                    <circle cx="12" cy="12" r="1.8" fill="currentColor" stroke="none" />
+                  </svg>
+                </span>
+                Máx. resultados
+              </label>
+              <input
+                id="max-results-input"
+                type="number"
+                class="field-input field-input-compact"
+                value="20"
+                min="5"
+                max="60"
+              />
+            </div>
+          </div>
+          <button class="btn-search" id="btn-search" onclick="startSearch()">
+            <span class="btn-search-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" class="ui-icon" role="img" aria-hidden="true">
+                <path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" fill="currentColor" stroke="none" />
+              </svg>
+            </span>
+            <span class="btn-search-text">Buscar Leads</span>
+          </button>
+        </div>
+
+        <!-- QUICK EXAMPLES -->
+        <div class="examples">
+          <span class="examples-label">Exemplos rápidos:</span>
+          <button class="example-chip" onclick="fillExample('Churrascaria', 'Santa Catarina')"><span class="example-chip-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="ui-icon" role="img" aria-hidden="true"><path d="M6 6v12M10 6v12M6 10h4" /><path d="M15 6l3 6-3 6" /></svg></span> Churrascarias em SC</button>
+          <button class="example-chip" onclick="fillExample('Oficina mecânica', 'São Paulo')"><span class="example-chip-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="ui-icon" role="img" aria-hidden="true"><path d="M14 4a5 5 0 0 0-6 6L4 14l6 6 4-4a5 5 0 0 0 6-6l-3 1-4-4 1-3z" /></svg></span> Oficinas em SP</button>
+          <button class="example-chip" onclick="fillExample('Clínica odontológica', 'Curitiba')"><span class="example-chip-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="ui-icon" role="img" aria-hidden="true"><path d="M12 4c2.5 0 4 1.7 4 4 0 1.5-.6 2.5-1 3.3-.4.7-.6 1.2-.6 2.2 0 1.6-1 6.5-2.4 6.5-1.1 0-1.3-1.4-1.6-2.9-.2-1.1-.4-2.4-1.4-2.4s-1.2 1.3-1.4 2.4c-.3 1.5-.5 2.9-1.6 2.9-1.4 0-2.4-4.9-2.4-6.5 0-1 .2-1.5-.6-2.2-.4-.8-1-1.8-1-3.3 0-2.3 1.5-4 4-4 1.4 0 1.8.5 2.6.5s1.2-.5 2.6-.5z" /></svg></span> Clínicas em Curitiba</button>
+          <button class="example-chip" onclick="fillExample('Academia de ginástica', 'Rio de Janeiro')"><span class="example-chip-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="ui-icon" role="img" aria-hidden="true"><path d="M6 8v8M9 6v12M15 6v12M18 8v8" /><path d="M9 12h6" /></svg></span> Academias no RJ</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROGRESS SECTION -->
+    <section class="progress-section" id="progress-section" style="display:none">
+      <div class="progress-card">
+        <div class="progress-header">
+          <div class="progress-spinner"></div>
+          <div>
+            <div class="progress-title" id="progress-title">Iniciando busca…</div>
+            <div class="progress-subtitle" id="progress-subtitle">Conectando ao Google Maps</div>
+          </div>
+        </div>
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progress-bar-fill"></div>
+        </div>
+        <div class="progress-stats">
+          <span id="progress-pct">0%</span>
+          <span id="progress-found">0 leads encontrados</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESULTS SECTION -->
+    <section class="results-section" id="results-section" style="display:none">
+      <div class="results-header">
+        <div class="results-meta">
+          <h2 class="results-title">Leads encontrados</h2>
+          <span class="results-badge" id="results-count-badge">0</span>
+        </div>
+        <div class="results-actions">
+          <input
+            id="filter-input"
+            type="text"
+            class="filter-input"
+            placeholder="Filtrar resultados…"
+            oninput="filterResults()"
+          />
+          <button class="btn-export" id="btn-export" onclick="exportExcel()">
+            <span class="btn-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" class="ui-icon" role="img" aria-hidden="true">
+                <path d="M12 3v10" />
+                <path d="M8 9l4 4 4-4" />
+                <path d="M5 15v4h14v-4" />
+              </svg>
+            </span>
+            Exportar Excel
+          </button>
+          <button class="btn-pdf" id="btn-export-pdf" onclick="exportPdf()">
+            <span class="btn-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" class="ui-icon" role="img" aria-hidden="true">
+                <path d="M8 3h6l4 4v14H8z" />
+                <path d="M14 3v5h5" />
+              </svg>
+            </span>
+            Exportar PDF
+          </button>
+          <button class="btn-new-search" onclick="resetSearch()">
+            <span class="btn-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" class="ui-icon" role="img" aria-hidden="true">
+                <path d="M7 7h10v4" />
+                <path d="M17 7l-3 3" />
+                <path d="M17 17H7v-4" />
+                <path d="M7 17l3-3" />
+              </svg>
+            </span>
+            Nova busca
+          </button>
+        </div>
+      </div>
+
+      <!-- CARDS -->
+      <div class="leads-grid" id="leads-grid"></div>
+    </section>
+
+    <!-- ERROR SECTION -->
+    <section class="error-section" id="error-section" style="display:none">
+      <div class="error-card">
+        <div class="error-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="ui-icon" role="img" aria-hidden="true">
+            <path d="M12 3 2.8 19.5A1 1 0 0 0 3.7 21h16.6a1 1 0 0 0 .9-1.5L12 3z" />
+            <path d="M12 9v5" />
+            <circle cx="12" cy="17" r="1" fill="currentColor" stroke="none" />
+          </svg>
+        </div>
+        <div class="error-title">Ocorreu um erro</div>
+        <div class="error-message" id="error-message"></div>
+        <button class="btn-new-search" onclick="resetSearch()">
+          <span class="btn-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="ui-icon" role="img" aria-hidden="true">
+              <path d="M7 7h10v4" />
+              <path d="M17 7l-3 3" />
+              <path d="M17 17H7v-4" />
+              <path d="M7 17l3-3" />
+            </svg>
+          </span>
+          Tentar novamente
+        </button>
+      </div>
+    </section>
+
+    <!-- HISTORY SECTION -->
+    <section class="history-section" id="history-section">
+      <div class="history-header">
+        <h3 class="history-title">Buscas recentes</h3>
+        <button class="btn-clear-history" type="button" onclick="clearSearchHistory()">
+          <span class="btn-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="ui-icon" role="img" aria-hidden="true">
+              <path d="M4 7h16" />
+              <path d="M9 7V5h6v2" />
+              <path d="M7 7l1 13h8l1-13" />
+              <path d="M10 11v5M14 11v5" />
+            </svg>
+          </span>
+          Limpar buscas
+        </button>
+      </div>
+      <div class="history-list" id="history-list">
+        <div class="history-empty">Nenhuma busca realizada ainda.</div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <p>LeadHunter • Dados extraídos do Google Maps em tempo real</p>
+    </footer>
+
+    <!-- DETAILS MODAL -->
+    <div class="lead-modal-backdrop" id="lead-modal-backdrop" style="display:none" onclick="closeLeadModal(event)">
+      <div class="lead-modal" id="lead-modal" role="dialog" aria-modal="true" aria-labelledby="lead-modal-title" onclick="event.stopPropagation()">
+        <button class="lead-modal-close" type="button" aria-label="Fechar detalhes" onclick="closeLeadModal()">×</button>
+        <div class="lead-modal-hero">
+          <div class="lead-modal-badge" id="lead-modal-index">Lead 01</div>
+          <h3 class="lead-modal-title" id="lead-modal-title">Nome do lead</h3>
+          <p class="lead-modal-subtitle" id="lead-modal-category">Categoria</p>
+        </div>
+        <div class="lead-modal-stats">
+          <div class="lead-modal-stat">
+            <span class="lead-modal-stat-label">Avaliação</span>
+            <span class="lead-modal-stat-value" id="lead-modal-rating">—</span>
+          </div>
+          <div class="lead-modal-stat">
+            <span class="lead-modal-stat-label">Avaliações</span>
+            <span class="lead-modal-stat-value" id="lead-modal-reviews">—</span>
+          </div>
+          <div class="lead-modal-stat">
+            <span class="lead-modal-stat-label">Contato</span>
+            <span class="lead-modal-stat-value" id="lead-modal-contacts-count">—</span>
+          </div>
+        </div>
+        <div class="lead-modal-body">
+          <div class="lead-modal-section">
+            <h4 class="lead-modal-section-title">Endereço</h4>
+            <p class="lead-modal-text" id="lead-modal-address">—</p>
+          </div>
+          <div class="lead-modal-section">
+            <h4 class="lead-modal-section-title">Telefones</h4>
+            <div class="lead-modal-list" id="lead-modal-phones"></div>
+          </div>
+          <div class="lead-modal-section">
+            <h4 class="lead-modal-section-title">Sites e redes sociais</h4>
+            <div class="lead-modal-list" id="lead-modal-websites"></div>
+          </div>
+        </div>
+        <div class="lead-modal-actions">
+          <a class="lead-modal-action lead-modal-action-primary" id="lead-modal-maps-link" href="#" target="_blank" rel="noopener">Abrir no Maps</a>
+          <button class="lead-modal-action" type="button" onclick="closeLeadModal()">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
